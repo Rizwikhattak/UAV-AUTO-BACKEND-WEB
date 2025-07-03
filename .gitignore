@@ -1,0 +1,38 @@
+# ---- Python bytecode / cache ----
+__pycache__/
+*.py[cod]
+*.pyo
+
+# ---- Virtual environments ----
+venv/
+*.env/           # just in case someone names their venv like “backend.env”
+
+# ---- IDE files ----
+.idea/           # PyCharm’s project settings
+.vscode/
+
+# ---- OS cruft ----
+.DS_Store
+Thumbs.db
+
+# ---- Logs & misc ----
+*.log
+
+# ---- Build / dist / wheels ----
+build/
+dist/
+*.egg-info/
+
+# ---- Large model / data zips ----
+# --- big model / data files ---
+Yolov8mTrainedmodel.zip
+yolo11x_solar/weights/*.pt
+*.zip          # (optional) ignore every zip
+*.pt           # (optional) ignore all PyTorch weights
+
+# ---- Environment configs ----
+.env
+
+/Yolov8m
+/yolo11x_solar
+/yolov8n

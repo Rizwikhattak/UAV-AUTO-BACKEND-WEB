@@ -1,0 +1,205 @@
+create database uavauto;
+use uavauto;
+
+CREATE TABLE `Operator` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(200) NOT NULL,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
+  `age` INT,
+  `gender` VARCHAR(50),
+  `validity` INT NOT NULL DEFAULT 1
+);
+
+CREATE TABLE `Station` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(200) NOT NULL,
+  `latitude` FLOAT NOT NULL,
+  `longitude` FLOAT NOT NULL,
+  `number_of_drones` INT,
+  `validity` INT NOT NULL DEFAULT 1
+);
+
+CREATE TABLE `Drone` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(200) NOT NULL,
+  `ceiling` FLOAT NOT NULL,
+  `fps` INT NOT NULL,
+  `flight_duration` FLOAT NOT NULL DEFAULT 1,
+  `speed` FLOAT NOT NULL DEFAULT 70,
+  `image_path` VARCHAR(255),
+  `station_id` INT,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`station_id`) REFERENCES `Station`(`id`)
+);
+
+CREATE TABLE `Route` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(200) NOT NULL,
+  `validity` INT NOT NULL DEFAULT 1,
+  `rows` INT NOT NULL,
+  `columns` INT NOT NULL,
+  `station_id` INT,
+  FOREIGN KEY (`station_id`) REFERENCES `Station`(`id`)
+);
+
+CREATE TABLE `MissionPlanner` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(200) NOT NULL,
+  `start_date` DATE,
+  `start_time` TIME,
+  `drone_id` INT,
+  `route_id` INT,
+  `status` VARCHAR(100),
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`drone_id`) REFERENCES `Drone`(`id`),
+  FOREIGN KEY (`route_id`) REFERENCES `Route`(`id`)
+);
+
+CREATE TABLE `MissionVideo` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mission_planner_id` INT,
+  `file_path` VARCHAR(300) NOT NULL,
+	`clean_solar_panels` INT,
+	`dusty_solar_panels` INT,
+     `damaged_solar_panels` INT,
+      `total_solar_panels` INT,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`mission_planner_id`) REFERENCES `MissionPlanner`(`id`)
+);
+
+
+
+CREATE TABLE `MissionDataLocation` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mission_video_id` INT,
+  `latitude` FLOAT NOT NULL,
+  `longitude` FLOAT NOT NULL,
+  `damage` VARCHAR(50),
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`mission_video_id`) REFERENCES `MissionVideo`(`id`)
+);
+
+CREATE TABLE `MissionDataImages` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mission_video_id` INT,
+  `image_path` VARCHAR(300) NOT NULL,
+  `solar_row` INT NOT NULL,
+  `solar_column` INT NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`mission_video_id`) REFERENCES `MissionVideo`(`id`)
+);
+
+CREATE TABLE `LocationPins` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `route_id` INT,
+  `latitude` FLOAT NOT NULL,
+  `longitude` FLOAT NOT NULL,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`route_id`) REFERENCES `Route`(`id`)
+);
+
+CREATE TABLE `DroneStationMapping` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `drone_id` INT,
+  `station_id` INT,
+  `status` VARCHAR(100),
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`drone_id`) REFERENCES `Drone`(`id`),
+  FOREIGN KEY (`station_id`) REFERENCES `Station`(`id`)
+);
+
+CREATE TABLE `DroneAvailabilityLog` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `drone_id` INT,
+  `mission_planner_id` INT,
+  `start_date` DATE,
+  `start_date_limit` DATE,
+  `start_time_limit` TIME,
+  `end_date_limit` DATE,
+  `end_time_limit` TIME,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`drone_id`) REFERENCES `Drone`(`id`),
+  FOREIGN KEY (`mission_planner_id`) REFERENCES `MissionPlanner`(`id`)
+);
+
+CREATE TABLE `Sortie` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mission_planner_id` INT,
+  `start_date` DATE,
+  `end_date` DATE,
+  `start_time` TIME,
+  `end_time` TIME,
+  `duration` FLOAT,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`mission_planner_id`) REFERENCES `MissionPlanner`(`id`)
+);
+
+CREATE TABLE `mission_panel_map` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mission_planner_id` INT,
+  `solar_row` INT,
+  `solar_column` INT,
+  `solar_watts` INT,
+  `solar_frame_no` INT,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`mission_planner_id`) REFERENCES `MissionPlanner`(`id`)
+);
+CREATE TABLE `solar_panel_efficiency` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `label` VARCHAR(100),
+  `efficiency_pct` double,
+  `validity` INT NOT NULL DEFAULT 1
+);
+
+CREATE TABLE `efficiency_report` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mission_planner_id` INT,
+  `mission_panel_map_id` INT,
+  `label` VARCHAR(100),
+  `calculated_efficiency` double,
+  `validity` INT NOT NULL DEFAULT 1,
+  FOREIGN KEY (`mission_planner_id`) REFERENCES `MissionPlanner`(`id`),
+    FOREIGN KEY (`mission_panel_map_id`) REFERENCES `mission_panel_map`(`id`)
+);
+
+CREATE TABLE `MaintenancePersonal` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(200) NOT NULL,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password` VARCHAR(255) NOT NULL,
+  `age` INT,
+  `gender` VARCHAR(50),
+  `validity` INT NOT NULL DEFAULT 1
+);
+CREATE TABLE `MaintenanceSchedule` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mission_planner_id` INT,
+  `dateFrom` DATE NOT NULL,
+  `dateTo` DATE NOT NULL,
+  `validity` INT NOT NULL DEFAULT 1,
+  `label` VARCHAR(200),
+  FOREIGN KEY (`mission_planner_id`) REFERENCES `MissionPlanner`(`id`)
+);
+
+use uavauto;
+SET FOREIGN_KEY_CHECKS = 0;
+delete from route;
+delete from locationpins;
+delete from station;
+delete from drone;
+delete from dronestationmapping;
+delete from missionplanner;
+delete from droneavailabilitylog;
+delete from missionvideo;
+delete from missiondataimages;
+delete from missiondatalocation;
+delete from sortie;
+
+
+
+
+
+
+
