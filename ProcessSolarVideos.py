@@ -91,10 +91,10 @@ def process_video(
 
             print(f' current row is {grid_row}')
             print(f'current col is {grid_col}')
-            cv2.imshow("Prediction", frame)
+            # cv2.imshow("Prediction", frame)
             print(">> Press any key to continue...")
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
+            # cv2.waitKey(0)
+            # cv2.destroyAllWindows()
 
             frame_filename = f"frame_{frames:04d}.jpg"
 
