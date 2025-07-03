@@ -3,7 +3,6 @@ from Controller import DroneController
 from config import app
 import os
 drone_routes = Blueprint('drone_routes',__name__)
-
 @drone_routes.route('/insert_drone',methods=['POST'])
 def insert_drone():
     data = request.form.to_dict()
