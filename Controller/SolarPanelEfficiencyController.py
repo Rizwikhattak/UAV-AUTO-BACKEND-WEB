@@ -7,14 +7,17 @@ class SolarPanelEfficiencyController:
     @staticmethod
     def insert_solar_panel_efficiency(data):
         try:
-            solar_panel_efficiency = SolarPanelEfficiency(label=data['label'], efficiency_pct=data['efficiency_pct'])
-            db.session.add(solar_panel_efficiency)
-            db.session.commit()
-            return {
-                "id": solar_panel_efficiency.id,
-                "label": solar_panel_efficiency.label,
-                "efficiency_pct":solar_panel_efficiency.efficiency_pct,
-            }
+            response = []
+            for eff in data:
+                solar_panel_efficiency = SolarPanelEfficiency(label=eff['label'], efficiency_pct=eff['efficiency_pct'])
+                db.session.add(solar_panel_efficiency)
+                db.session.commit()
+                response.append({
+                    "id": solar_panel_efficiency.id,
+                    "label": solar_panel_efficiency.label,
+                    "efficiency_pct": solar_panel_efficiency.efficiency_pct,
+                })
+            return response
         except Exception as e:
             print(e)
             return {}
@@ -23,18 +26,29 @@ class SolarPanelEfficiencyController:
     @staticmethod
     def update_solar_panel_efficiency(data):
         try:
-            solar_panel_efficiency = SolarPanelEfficiency.query.filter_by(id=data.get('id'), validity=1).first()
-            if solar_panel_efficiency:
-                solar_panel_efficiency.label = data.get('label', solar_panel_efficiency.label)
-                solar_panel_efficiency.efficiency_pct = data.get('efficiency_pct', solar_panel_efficiency.efficiency_pct)
-                db.session.commit()
-                return {
-                    "id": solar_panel_efficiency.id,
-                    "label": solar_panel_efficiency.label,
-                    "efficiency_pct": solar_panel_efficiency.efficiency_pct,
-                }
-            else:
-                return {}
+            response = []
+            for eff in data:
+                solar_panel_efficiency = SolarPanelEfficiency.query.filter_by(id=eff.get('id'), validity=1).first()
+                if solar_panel_efficiency:
+                    solar_panel_efficiency.label = eff.get('label', solar_panel_efficiency.label)
+                    solar_panel_efficiency.efficiency_pct = eff.get('efficiency_pct', solar_panel_efficiency.efficiency_pct)
+                    db.session.commit()
+                    response.append({
+                        "id": solar_panel_efficiency.id,
+                        "label": solar_panel_efficiency.label,
+                        "efficiency_pct": solar_panel_efficiency.efficiency_pct,
+                    })
+                else:
+                    new_solar_panel_efficiency = SolarPanelEfficiency(label=eff['label'],
+                                                                  efficiency_pct=eff['efficiency_pct'])
+                    db.session.add(new_solar_panel_efficiency)
+                    db.session.commit()
+                    response.append({
+                        "id": new_solar_panel_efficiency.id,
+                        "label": new_solar_panel_efficiency.label,
+                        "efficiency_pct": new_solar_panel_efficiency.efficiency_pct,
+                    })
+            return response
         except Exception as e:
             print(e)
             return {}

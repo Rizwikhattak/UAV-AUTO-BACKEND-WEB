@@ -26,12 +26,11 @@ def insert_solar_panel_efficiency():
 
 # ───────────────────────────── UPDATE ──────────────────────────────
 @solar_panel_efficiency_routes.route(
-    '/update_solar_panel_efficiency_by_id/<int:id>',
+    '/update_solar_panel_efficiency_by_id',
     methods=['PUT']
 )
-def update_solar_panel_efficiency_by_id(id):
+def update_solar_panel_efficiency_by_id():
     data = request.get_json()
-    data['id'] = id  # merge path-param into payload (pattern)
     result = SolarPanelEfficiencyController.update_solar_panel_efficiency(data)
     if result:
         return jsonify({'success': True, 'data': result}), 200
