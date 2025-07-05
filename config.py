@@ -9,7 +9,7 @@ CORS(app)
 
 # MySQL Configuration
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:moaaz@147..@localhost:3306/uavauto2'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:admin@localhost:3306/uavauto'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:Admin%401234@localhost:3306/uavauto'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

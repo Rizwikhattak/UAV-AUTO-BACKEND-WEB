@@ -123,3 +123,22 @@ class MissionPanelMapController:
         except Exception as e:
             print(e)
             return {}
+
+    @staticmethod
+    def get_mission_panel_maps_by_mission_id(id):
+        try:
+            mission_panel_maps = MissionPanelMap.query.filter_by(mission_planner_id=id, validity=1).all()
+            if mission_panel_maps:
+                return [{
+                    "id": mpm.id,
+                    "mission_planner_id": mpm.mission_planner_id,
+                    "solar_row": mpm.solar_row,
+                    "solar_column": mpm.solar_column,
+                    "solar_watts": mpm.solar_watts,
+                    "solar_frame_no": mpm.solar_frame_no
+                } for mpm in mission_panel_maps]
+            else:
+                return {}
+        except Exception as e:
+            print(e)
+            return {}

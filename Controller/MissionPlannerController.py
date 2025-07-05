@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import numpy
 from flask import url_for, send_file
 
-from Controller import SortieController, DroneAvailabilityLogController, DroneController, RouteController
+from Controller import SortieController, DroneAvailabilityLogController, DroneController, RouteController,MissionPanelMapController,EfficiencyReportController
 from config import db
 from Model import MissionPlanner,Sortie, Drone,DroneAvailabilityLog,MissionVideo,Route,MissionDataImages
 import os
@@ -182,18 +182,20 @@ class MissionPlannerController():
 
                 db.session.add(mission_video)
                 db.session.commit()
+
+                mpms = MissionPanelMapController.get_mission_panel_maps_by_mission_id(data.get("mission_planner_id"))
+
                 # framesToKeep = [0, 146, 287, 372, 452, 578] # for wahab's video
                 framesToKeep = [51, 144, 224, 294, 365, 493, 612, 763, 1005, 1105, 1187, 1246]  # for aina's video
                 # Process the video and get detection results
-                model_path = r"E:\user\abdul wahab\PythonProjects\final_year_project_backend_v2\yolo11x_solar\weights\best.pt"
+                model_path = r"D:\UNIVERSITY PROJECT\UAV-AUTO-BACKEND-WEB\yolo11x_solar\weights\best.pt"
                 # model_path = r"E:\user\abdul wahab\PythonProjects\final_year_project_backend_v2\yolov8n\weights\best.pt"
                 counts, grid = process_video(
                     video_path,
                     clean_folder, dusty_folder, damaged_folder,
-                    solar_rows, solar_columns,
+                    mpms,
                     model_path,
                     mission_video.id,  # Now we have the ID
-                    framesToKeep,
                     MissionPlannerController.insert_mission_data_image
                 )
 
@@ -210,6 +212,11 @@ class MissionPlannerController():
                     'id': data.get('mission_planner_id'),
                     'status': 'completed'
                 })
+
+                for g in grid:
+                    g['mission_panel_map_id'] = g['id']
+                    EfficiencyReportController.insert_efficiency_report(g)
+
 
                 response_payload = {
                     "id": mission_video.id,

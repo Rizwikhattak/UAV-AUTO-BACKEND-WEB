@@ -69,3 +69,14 @@ def get_mission_panel_map_by_id(id):
         return jsonify({'success': True, 'data': result}), 200
     else:
         return jsonify({'success': False, 'data': result}), 400
+
+@mission_panel_map_routes.route(
+    '/get_mission_panel_maps_by_mission_id/<int:id>',
+    methods=['GET']
+)
+def get_mission_panel_maps_by_mission_id(id):
+    result = MissionPanelMapController.get_mission_panel_maps_by_mission_id(id)
+    if result:
+        return jsonify({'success': True, 'data': result}), 200
+    else:
+        return jsonify({'success': False, 'data': result}), 400

@@ -1,4 +1,5 @@
 # Controller/EfficiencyReportController.py
+from Controller import MissionPanelMapController, SolarPanelEfficiencyController
 from config import db
 from Model import EfficiencyReport
 
@@ -8,21 +9,31 @@ class EfficiencyReportController:
     @staticmethod
     def insert_efficiency_report(data):
         try:
-            er = EfficiencyReport(
-                mission_planner_id = data['mission_planner_id'],
-                mission_panel_map_id = data['mission_panel_map_id'],
-                label = data['label'],
-                calculated_efficiency = data.get('calculated_efficiency')
-            )
-            db.session.add(er)
-            db.session.commit()
-            return {
-                "id": er.id,
-                "mission_planner_id": er.mission_planner_id,
-                "mission_panel_map_id": er.mission_panel_map_id,
-                "label": er.label,
-                "calculated_efficiency": er.calculated_efficiency
-            }
+            efficiencies = SolarPanelEfficiencyController.get_all_solar_panel_efficiency()
+            res = 0
+            if efficiencies:
+                for eff in efficiencies:
+                    if eff["label"] == data['label']:
+                        eff_pct = eff["efficiency_pct"]
+                        solar_wats =data["solar_watts"]
+                        res = (eff_pct/100) * solar_wats
+
+                er = EfficiencyReport(
+                    mission_planner_id = data['mission_planner_id'],
+                    mission_panel_map_id = data['mission_panel_map_id'],
+                    label = data['label'],
+                    calculated_efficiency = res
+                )
+                db.session.add(er)
+                db.session.commit()
+                return {
+                    "id": er.id,
+                    "mission_planner_id": er.mission_planner_id,
+                    "mission_panel_map_id": er.mission_panel_map_id,
+                    "label": er.label,
+                    "calculated_efficiency": er.calculated_efficiency
+                }
+            return {}
         except Exception as e:
             print(e)
             return {}
