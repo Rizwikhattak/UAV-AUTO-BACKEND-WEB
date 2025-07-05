@@ -124,14 +124,25 @@ class EfficiencyReportController:
     def get_efficiency_reports_by_mission_id(id):
         try:
             ers = EfficiencyReport.query.filter_by(mission_planner_id=id, validity=1).all()
+
             if ers:
-                return [{
-                    "id": er.id,
-                    "mission_planner_id": er.mission_planner_id,
-                    "mission_panel_map_id": er.mission_panel_map_id,
-                    "label": er.label,
-                    "calculated_efficiency": er.calculated_efficiency
-                } for er in ers]
+                response = []
+                for er in ers:
+                    mpm = MissionPanelMapController.get_mission_panel_map_by_id(er.mission_panel_map_id)
+                    if mpm:
+                        efReport = {
+                            "id": er.id,
+                            "mission_planner_id": er.mission_planner_id,
+                            "mission_panel_map_id": er.mission_panel_map_id,
+                            "label": er.label,
+                            "calculated_efficiency": er.calculated_efficiency,
+                            "solar_row": mpm["solar_row"],
+                            "solar_column": mpm["solar_column"],
+                            "solar_watts": mpm["solar_watts"],
+                            "solar_frame_no": mpm["solar_frame_no"]
+                        }
+                        response.append(efReport)
+                return response
             return {}
         except Exception as e:
             print(e)
