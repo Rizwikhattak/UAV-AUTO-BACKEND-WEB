@@ -123,7 +123,7 @@ class EfficiencyReportController:
     @staticmethod
     def get_efficiency_reports_by_mission_id(id):
         try:
-            ers = EfficiencyReport.query.filter_by(id=id, validity=1).all()
+            ers = EfficiencyReport.query.filter_by(mission_planner_id=id, validity=1).all()
             if ers:
                 return [{
                     "id": er.id,
