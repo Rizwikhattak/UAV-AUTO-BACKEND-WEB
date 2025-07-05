@@ -64,3 +64,13 @@ def get_efficiency_report_by_id(id):
     if result:
         return jsonify({'success': True, 'data': result}), 200
     return jsonify({'success': False, 'data': result}), 400
+
+@efficiency_report_routes.route(
+    '/get_efficiency_reports_by_mission_id/<int:id>',
+    methods=['GET']
+)
+def get_efficiency_reports_by_mission_id(id):
+    result = EfficiencyReportController.get_efficiency_reports_by_mission_id(id)
+    if result:
+        return jsonify({'success': True, 'data': result}), 200
+    return jsonify({'success': False, 'data': result}), 400

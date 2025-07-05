@@ -119,3 +119,20 @@ class EfficiencyReportController:
         except Exception as e:
             print(e)
             return {}
+
+    @staticmethod
+    def get_efficiency_reports_by_mission_id(id):
+        try:
+            ers = EfficiencyReport.query.filter_by(id=id, validity=1).all()
+            if ers:
+                return [{
+                    "id": er.id,
+                    "mission_planner_id": er.mission_planner_id,
+                    "mission_panel_map_id": er.mission_panel_map_id,
+                    "label": er.label,
+                    "calculated_efficiency": er.calculated_efficiency
+                } for er in ers]
+            return {}
+        except Exception as e:
+            print(e)
+            return {}
