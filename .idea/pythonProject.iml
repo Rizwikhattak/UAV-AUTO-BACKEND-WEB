@@ -4,6 +4,11 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
+      <excludeFolder url="file://$MODULE_DIR$/uploads/missions/10" />
+      <excludeFolder url="file://$MODULE_DIR$/uploads/missions/11" />
+      <excludeFolder url="file://$MODULE_DIR$/uploads/missions/3" />
+      <excludeFolder url="file://$MODULE_DIR$/uploads/missions/7" />
+      <excludeFolder url="file://$MODULE_DIR$/uploads/missions/9" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
