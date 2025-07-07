@@ -72,7 +72,7 @@ def get_maintenance_schedule_by_id(id):
     "/get_scheduled_missions",
     methods=["GET"]
 )
-def get_maintenance_schedule_by_id(id):
+def get_scheduled_missions():
     result = MaintenanceScheduleController.get_scheduled_missions()
     if result:
         return jsonify({"success": True, "data": result}), 200

@@ -10,8 +10,8 @@ class MaintenanceScheduleController:
         try:
             ms = MaintenanceSchedule(
                 mission_planner_id=data["mission_planner_id"],
-                dateFrom=data["dateFrom"],
-                dateTo=data["dateTo"],
+                date_from=data["date_from"],
+                date_to=data["date_to"],
                 label=data.get("label")
             )
             db.session.add(ms)
@@ -19,8 +19,8 @@ class MaintenanceScheduleController:
             return {
                 "id": ms.id,
                 "mission_planner_id": ms.mission_planner_id,
-                "dateFrom": str(ms.dateFrom),
-                "dateTo": str(ms.dateTo),
+                "date_from": str(ms.date_from),
+                "date_to": str(ms.date_to),
                 "label": ms.label
             }
         except Exception as e:
@@ -38,16 +38,16 @@ class MaintenanceScheduleController:
 
             if ms:
                 ms.mission_planner_id = data.get("mission_planner_id", ms.mission_planner_id)
-                ms.dateFrom         = data.get("dateFrom", ms.dateFrom)
-                ms.dateTo           = data.get("dateTo", ms.dateTo)
+                ms.date_from         = data.get("date_from", ms.date_from)
+                ms.date_to           = data.get("date_to", ms.date_to)
                 ms.label            = data.get("label", ms.label)
 
                 db.session.commit()
                 return {
                     "id": ms.id,
                     "mission_planner_id": ms.mission_planner_id,
-                    "dateFrom": str(ms.dateFrom),
-                    "dateTo": str(ms.dateTo),
+                    "date_from": str(ms.date_from),
+                    "date_to": str(ms.date_to),
                     "label": ms.label
                 }
             return {}
@@ -66,8 +66,8 @@ class MaintenanceScheduleController:
                 return {
                     "id": ms.id,
                     "mission_planner_id": ms.mission_planner_id,
-                    "dateFrom": str(ms.dateFrom),
-                    "dateTo": str(ms.dateTo),
+                    "date_from": str(ms.date_from),
+                    "date_to": str(ms.date_to),
                     "label": ms.label
                 }
             return {}
@@ -84,8 +84,8 @@ class MaintenanceScheduleController:
                 {
                     "id": ms.id,
                     "mission_planner_id": ms.mission_planner_id,
-                    "dateFrom": str(ms.dateFrom),
-                    "dateTo": str(ms.dateTo),
+                    "date_from": str(ms.date_from),
+                    "date_to": str(ms.date_to),
                     "label": ms.label
                 } for ms in all_ms
             ]
@@ -102,8 +102,8 @@ class MaintenanceScheduleController:
                 return {
                     "id": ms.id,
                     "mission_planner_id": ms.mission_planner_id,
-                    "dateFrom": str(ms.dateFrom),
-                    "dateTo": str(ms.dateTo),
+                    "date_from": str(ms.date_from),
+                    "date_to": str(ms.date_to),
                     "label": ms.label
                 }
             return {}
@@ -118,8 +118,16 @@ class MaintenanceScheduleController:
             if missions:
                 scheduled_missions = []
                 for mission in missions:
-                    sch_mission = MaintenanceSchedule.query.filter_by(mission_planner_id=mission['id'],validity=1).first()
-                    dict = {**mission}
+                    sch_mission = MaintenanceSchedule.query.filter_by(mission_planner_id=mission.id,validity=1).first()
+                    dict = {
+                        "mission_planner_id": mission.id,
+                        "name": mission.name,
+                        "route_id": mission.route_id,
+                        "drone_id": mission.drone_id,
+                        "start_date": mission.start_date.strftime('%d-%m-%Y'),
+                        "start_time": mission.start_time.strftime('%I:%M:%S %p'),
+                        "status": mission.status
+                    }
                     if sch_mission:
                         dict['scheduled'] = True
                     else:
