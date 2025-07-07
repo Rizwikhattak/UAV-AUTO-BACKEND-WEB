@@ -77,3 +77,14 @@ def get_scheduled_missions():
     if result:
         return jsonify({"success": True, "data": result}), 200
     return jsonify({"success": False, "data": result}), 400
+
+
+@maintenance_schedule_routes.route(
+    "/get_mission_data_for_scheduled_by_id/<int:id>",
+    methods=["GET"]
+)
+def get_mission_data_for_scheduled_by_id(id):
+    result = MaintenanceScheduleController.get_mission_data_for_scheduled_by_id(id)
+    if result:
+        return jsonify({"success": True, "data": result}), 200
+    return jsonify({"success": False, "data": result}), 400

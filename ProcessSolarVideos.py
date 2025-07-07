@@ -67,16 +67,17 @@ def process_video(
                     ):
                         continue
 
-                    panel_class = class_names[cls_id]
+                    panel_class = model.names[cls_id]
+
                     current_frame_classes.add(panel_class)
                     current_mpm['label'] = panel_class
                     grid.append(current_mpm)
-                    color = (0, 255, 0) if cls_id == 0 else (0, 165, 255) if cls_id == 1 else (0, 0, 255)
+                    color = (0, 255, 0) if cls_id == 0 else (0, 0, 255)   if cls_id == 1 else (0, 165, 255)
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
 
                     # Text: class name + confidence
                     cv2.putText(frame, f"{panel_class} {conf:.2f}",
-                                (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                                (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
 
                     # ➕ Center of the bounding box: display grid_row, grid_col
                     center_x = int((x1 + x2) / 2)
@@ -94,10 +95,14 @@ def process_video(
 
             print(f' current row is {current_mpm["solar_row"]}')
             print(f'current col is {current_mpm["solar_column"]}')
-            # cv2.imshow("Prediction", frame)
+            scale_percent = 70  # Resize to 70% of original size
+            width = int(frame.shape[1] * scale_percent / 100)
+            height = int(frame.shape[0] * scale_percent / 100)
+            resized_frame = cv2.resize(frame, (width, height))
+            cv2.imshow("Prediction", resized_frame)
             print(">> Press any key to continue...")
-            # cv2.waitKey(0)
-            # cv2.destroyAllWindows()
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
 
             frame_filename = f"frame_{frames:04d}.jpg"
 

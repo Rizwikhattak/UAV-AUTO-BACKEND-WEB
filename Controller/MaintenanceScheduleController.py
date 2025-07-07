@@ -1,5 +1,5 @@
 from config import db
-from Model import MaintenanceSchedule, MissionPlanner
+from Model import MaintenanceSchedule, MissionPlanner, MissionPanelMap, EfficiencyReport
 
 
 class MaintenanceScheduleController:
@@ -134,6 +134,35 @@ class MaintenanceScheduleController:
                         dict['scheduled'] = False
                     scheduled_missions.append(dict)
                 return scheduled_missions
+            return {}
+        except Exception as e:
+            print(e)
+            return {}
+
+    @staticmethod
+    def get_mission_data_for_scheduled_by_id(mission_id):
+        try:
+            missions = (db.session.query(MissionPanelMap,EfficiencyReport)
+                        .join(EfficiencyReport,MissionPanelMap.id==EfficiencyReport.mission_panel_map_id)
+                        .filter(EfficiencyReport.mission_planner_id==mission_id,EfficiencyReport.validity==1,MissionPanelMap.validity==1).all())
+            if missions:
+                response = {
+                    "dusty_solar_panel":[],
+                    "damaged_solar_panel":[]
+                }
+                for panel_map,ef_rep in missions:
+                    if ef_rep.label == "dusty_solar_panel":
+                        response['dusty_solar_panel'].append({
+                            'solar_row':panel_map.solar_row,
+                            'solar_column':panel_map.solar_column
+                        })
+                    elif  ef_rep.label == "damaged_solar_panel":
+                        response['damaged_solar_panel'].append({
+                            'solar_row': panel_map.solar_row,
+                            'solar_column': panel_map.solar_column
+                        })
+
+                return response
             return {}
         except Exception as e:
             print(e)

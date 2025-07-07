@@ -41,8 +41,8 @@ def run_yolo_on_video(video_path, model_path, confidence=0.5):
 
 # # Run the function
 # run_yolo_on_video(
-#     r"C:\Users\rizwi\Downloads\All Video\dji_fly_20250522_164316_595_1749024046873_video.MP4",
-#     r"D:\UNIVERSITY PROJECT\uavauto_riz\yolo11x_solar\weights\best.pt",
+#     r"D:\UNIVERSITY PROJECT\Aina.MP4",
+#     r"D:\UNIVERSITY PROJECT\UAV-AUTO-BACKEND-WEB\yolo11x_solar\weights\best.pt",
 #     confidence=0.4
 # )
 
@@ -121,7 +121,7 @@ def show_video_frames_with_yolo(video_path, model_path):
             conf = box.conf[0]
             cls_id = int(box.cls[0])
             label = model.names[cls_id]
-
+            print("names",model.names)
             # Draw rectangle
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
             cv2.putText(frame, f"{label} {conf:.2f}", (x1, y1 - 10),
@@ -138,8 +138,7 @@ def show_video_frames_with_yolo(video_path, model_path):
     cv2.destroyAllWindows()
 
 
-# Example usage:
-video_path = r"C:\Users\rizwi\Downloads\All Video\Rizwan1.MP4"
-model_path = r"D:\UNIVERSITY PROJECT\uavauto_riz\yolov8n\weights\best.pt"  # Replace with your model path
+video_path = r"D:\UNIVERSITY PROJECT\Aina.MP4"
+model_path = r"D:\UNIVERSITY PROJECT\UAV-AUTO-BACKEND-WEB\yolo11x_solar\weights\best.pt"  # Replace with your model path
 
 show_video_frames_with_yolo(video_path, model_path)
