@@ -41,7 +41,30 @@ class MissionPlannerController():
             print(e)
             return {}
 
+        # Aina code ab run karain
+    @staticmethod
+    def abort_mission(id):
+        try:
+            mission_plan = MissionPlanner.query.filter_by(id=id, validity=1).first()
+            # print(mission_plan)
+            drone_availability_log = DroneAvailabilityLog.query.filter_by(mission_planner_id=mission_plan.id,
+                                                                          validity=1).first()
+            if drone_availability_log:
+                drone_availability_log.validity = 0
+            if mission_plan:
+                mission_plan.status = 'aborted'
+                db.session.commit()
+                return {
+                    "id": mission_plan.id,
+                    "status": mission_plan.status,
+                }
+            else:
+                return {}
+        except Exception as e:
+            print(e)
+            return {}
 
+        # Aina Code end
     @staticmethod
     def update_mission_plan_by_id(data):
         try:

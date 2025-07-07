@@ -22,6 +22,14 @@ def insert_mission_plan():
 #     else:
 #         return jsonify({"success":False,'data':mission_plan}),400
 
+@mission_planner_routes.route('/abort_mission/<int:id>',methods=['PUT'])
+def abort_mission(id):
+    mission_plan = MissionPlannerController.abort_mission(id)
+    if mission_plan:
+        return jsonify({'success':True,'data':mission_plan}),200
+    else:
+        return jsonify({'success':False,'data':mission_plan}),400
+
 @mission_planner_routes.route('/update_mission_plan_by_id/<int:id>',methods=['PUT'])
 def update_mission_plan_by_id(id):
     data = request.get_json()
