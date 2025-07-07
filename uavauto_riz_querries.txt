@@ -176,8 +176,8 @@ CREATE TABLE `MaintenancePersonal` (
 CREATE TABLE `MaintenanceSchedule` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `mission_planner_id` INT,
-  `dateFrom` DATE NOT NULL,
-  `dateTo` DATE NOT NULL,
+  `date_from` DATE NOT NULL,
+  `date_to` DATE NOT NULL,
   `validity` INT NOT NULL DEFAULT 1,
   `label` VARCHAR(200),
   FOREIGN KEY (`mission_planner_id`) REFERENCES `MissionPlanner`(`id`)
@@ -197,6 +197,7 @@ delete from missiondataimages;
 delete from missiondatalocation;
 delete from sortie;
 
+ALTER TABLE table_name RENAME COLUMN old_column_name TO new_column_name;
 
 
 

@@ -8,8 +8,8 @@ class MaintenanceSchedule(db.Model):
                            db.Integer,
                            db.ForeignKey("MissionPlanner.id"),
                            )
-    dateFrom = db.Column(db.Date,    nullable=False)
-    dateTo= db.Column(db.Date,    nullable=False)
+    date_from = db.Column(db.Date,    nullable=False)
+    date_to= db.Column(db.Date,    nullable=False)
     validity = db.Column(db.Integer, default=1, nullable=False)
     label= db.Column(db.String(200), nullable=True)
 

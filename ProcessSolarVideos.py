@@ -161,7 +161,7 @@ def process_video(
 # Aina.mp4 Frames: 35 141 219 279 359 475
 # Wahab.mp4 Frames: 1 141 285(not complete) 359 442 533
 # Rizwan1.mp4 Frames: 26 191 347 457 543 698
-
+# framesToKeep = [0, 146, 287, 372, 452, 5781 141 285 359 442 533] for Wahab.mp4 video
 
 
 # import cv2

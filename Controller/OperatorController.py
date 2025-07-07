@@ -1,5 +1,5 @@
 from config import db, app
-from Model import  Operator
+from Model import Operator, MaintenancePersonal
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -35,10 +35,16 @@ class OperatorController:
                 print("password", password)
                 print("is valid", check_password_hash(user.password, password))
                 if check_password_hash(user.password, password):
-                    return {'name': user.name, 'email': user.email, 'id': user.id}
+                    return {'name': user.name, 'email': user.email, 'id': user.id,'role':'operator'}
                 else:
                     return {}
             else:
+                mp = MaintenancePersonal.query.filter_by(email=email,validity=1).first()
+                if mp is not None:
+                    if check_password_hash(mp.password, password):
+                        return {'name': mp.name, 'email': mp.email, 'id': mp.id,'role':'maintenance'}
+                    else:
+                        return {}
                 return {}
         except Exception as e:
             print(e)

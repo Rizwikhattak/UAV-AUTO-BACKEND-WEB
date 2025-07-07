@@ -1,5 +1,5 @@
 from config import db
-from Model import MaintenanceSchedule
+from Model import MaintenanceSchedule, MissionPlanner
 
 
 class MaintenanceScheduleController:
@@ -106,6 +106,26 @@ class MaintenanceScheduleController:
                     "dateTo": str(ms.dateTo),
                     "label": ms.label
                 }
+            return {}
+        except Exception as e:
+            print(e)
+            return {}
+
+    @staticmethod
+    def get_scheduled_missions():
+        try:
+            missions = MissionPlanner.query.filter_by(status='completed',validity=1).all()
+            if missions:
+                scheduled_missions = []
+                for mission in missions:
+                    sch_mission = MaintenanceSchedule.query.filter_by(mission_planner_id=mission['id'],validity=1).first()
+                    dict = {**mission}
+                    if sch_mission:
+                        dict['scheduled'] = True
+                    else:
+                        dict['scheduled'] = False
+                    scheduled_missions.append(dict)
+                return scheduled_missions
             return {}
         except Exception as e:
             print(e)
